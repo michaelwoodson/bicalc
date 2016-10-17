@@ -1,5 +1,5 @@
 <template>
-  <div class="todoapp" id="root">
+  <div id="root">
     <header-component></header-component>
     <main-section :filter="filter"></main-section>
   </div>
@@ -8,7 +8,7 @@
 <script>
 import Header from '../components/Header.vue';
 import MainSection from '../components/MainSection.vue';
-import {SHOW_ALL} from '../constants/TodoFilters';
+import {SHOW_ALL} from '../constants/BudgetItemFilters';
 
 export default {
   name: 'App',

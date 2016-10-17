@@ -1,19 +1,19 @@
 <template>
   <section class="main">
-    <input v-if="todos.length"
+    <input v-if="budgetItems.length"
       class="toggle-all"
       type="checkbox"
       v-model="checked"
-      v-on:click="handleCompleteAll"
+      v-on:click="handleSlashAll"
       />
-    <ul class="todo-list">
-      <todo-item
-        v-for="todo in todos.filter(selectedFilter.filter)"
-        :todo="todo"
-      ></todo-item>
+    <ul>
+      <budget-item
+        v-for="budgetItem in budgetItems.filter(selectedFilter.filter)"
+        :budgetItem="budgetItem"
+      ></budget-item>
     </ul>
-    <footer-component v-if="todos.length"
-      :completed-count="completedCount"
+    <footer-component v-if="budgetItems.length"
+      :slashed-count="slashedCount"
       :active-count="activeCount"
       :selected-filter="selectedFilter"
       :on-show="handleShow"
@@ -24,7 +24,7 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import VisibilityFilters from '../constants/VisibilityFilters';
-import TodoItem from './TodoItem.vue';
+import BudgetItem from './BudgetItem.vue';
 import Footer from './Footer.vue';
 
 export default {
@@ -36,34 +36,34 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['todos']),
+    ...mapGetters(['budgetItems']),
     checked() {
-      return this.completedCount === this.todos.length;
+      return this.slashedCount === this.budgetItems.length;
     },
-    completedCount() {
-      return this.todos.reduce((count, todo) =>
-        todo.completed ? count + 1 : count,
+    slashedCount() {
+      return this.budgetItems.reduce((count, item) =>
+        item.slashed ? count + 1 : count,
         0
       );
     },
     activeCount() {
-      return this.todos.length - this.completedCount;
+      return this.budgetItems.length - this.slashedCount;
     },
     selectedFilter() {
       return VisibilityFilters[this.mainFilter];
     }
   },
   methods: {
-    ...mapActions(['completeAll']),
-    handleCompleteAll() {
-      this.completeAll();
+    ...mapActions(['slashAll']),
+    handleSlashAll() {
+      this.slashAll();
     },
     handleShow(filter) {
       this.mainFilter = filter;
     }
   },
   components: {
-    'todo-item': TodoItem,
+    'budget-item': BudgetItem,
     'footer-component': Footer
   }
 };

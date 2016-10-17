@@ -1,47 +1,35 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
 export const initialState = {
-  todos: [
-    {
-      text: 'Use Redux',
-      completed: false,
-      id: 0
-    }
-  ]
+  population: 320000000,
+  budgetItems: []
 };
 
+addItem('SNAP', 75000000000);
+addItem('Other thing', 150000000000);
+
+let idCounter = 0;
+function addItem(text, cost) {
+  initialState.budgetItems.push({
+    text,
+    cost,
+    slashed: false,
+    id: idCounter++
+  });
+}
+
 export default {
-  [ActionTypes.ADD_TODO](state, text) {
-    state.todos.unshift({
-      id: state.todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1) + 1,
-      completed: false,
-      text
-    });
-  },
-  [ActionTypes.DELETE_TODO](state, id) {
-    state.todos = state.todos.filter(todo => todo.id !== id);
-  },
-  [ActionTypes.EDIT_TODO](state, id, text) {
-    state.todos = state.todos.map(todo =>
-      todo.id === id ?
-        Object.assign({}, todo, {text}) :
-        todo
+  [ActionTypes.SLASH_BUDGET_ITEM](state, id) {
+    state.budgetItems = state.budgetItems.map(item =>
+      item.id === id ?
+        Object.assign({}, item, {slashed: !item.slashed}) :
+        item
     );
   },
-  [ActionTypes.COMPLETE_TODO](state, id) {
-    state.todos = state.todos.map(todo =>
-      todo.id === id ?
-        Object.assign({}, todo, {completed: !todo.completed}) :
-        todo
-    );
-  },
-  [ActionTypes.COMPLETE_ALL](state) {
-    const areAllMarked = state.todos.every(todo => todo.completed);
-    state.todos = state.todos.map(todo => Object.assign({}, todo, {
-      completed: !areAllMarked
+  [ActionTypes.SLASH_ALL](state) {
+    const areAllSlashed = state.budgetItems.every(item => item.slashed);
+    state.budgetItems = state.budgetItems.map(item => Object.assign({}, item, {
+      slashed: !areAllSlashed
     }));
-  },
-  [ActionTypes.CLEAR_COMPLETED](state) {
-    state.todos = state.todos.filter(todo => todo.completed === false);
   }
 };

@@ -1,6 +1,6 @@
-import TodoItem from './TodoItem.vue';
+import BudgetItem from './BudgetItem.vue';
 
-describe('TodoItem', () => {
+describe('BudgetItem', () => {
   it('should have correct props', () => {
     expect(TodoItem.props).toEqual(['todo']);
   });

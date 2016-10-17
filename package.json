@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "gulp": "github:gulpjs/gulp#4ed9a4a3275559c73a396eff7e1fde3824951ebb",
-    "todomvc-app-css": "^2.0.4",
+    "numeral": "1.5.3",
     "vue": "^2.0.0-rc.6",
     "vuex": "^2.0.0-rc.4"
   },
