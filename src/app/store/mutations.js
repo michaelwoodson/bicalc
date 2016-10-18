@@ -13,23 +13,23 @@ function addItem(text, cost) {
   initialState.budgetItems.push({
     text,
     cost,
-    slashed: false,
+    applied: false,
     id: idCounter++
   });
 }
 
 export default {
-  [ActionTypes.SLASH_BUDGET_ITEM](state, id) {
+  [ActionTypes.APPLY_BUDGET_ITEM](state, id) {
     state.budgetItems = state.budgetItems.map(item =>
       item.id === id ?
-        Object.assign({}, item, {slashed: !item.slashed}) :
+        Object.assign({}, item, {applied: !item.applied}) :
         item
     );
   },
-  [ActionTypes.SLASH_ALL](state) {
-    const areAllSlashed = state.budgetItems.every(item => item.slashed);
+  [ActionTypes.APPLY_ALL](state) {
+    const areAllApplied = state.budgetItems.every(item => item.applied);
     state.budgetItems = state.budgetItems.map(item => Object.assign({}, item, {
-      slashed: !areAllSlashed
+      applied: !areAllApplied
     }));
   }
 };

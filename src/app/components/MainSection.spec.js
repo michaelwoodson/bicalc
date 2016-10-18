@@ -8,24 +8,24 @@ describe('MainSection', () => {
   describe('computed properties', () => {
     beforeEach(() => {
       MainSection.state = {
-        todos: [{text: 'Use Redux', completed: false, id: 0}]
+        budgetItems: [{text: 'Use Redux', applied: false, id: 0}]
       };
     });
 
     it('should return true', () => {
-      MainSection.completedCount = 1;
-      MainSection.todos = MainSection.state.todos;
+      MainSection.appliedCount = 1;
+      MainSection.budgetItems = MainSection.state.budgetItems;
       expect(MainSection.computed.checked.call(MainSection)).toEqual(true);
     });
 
     it('should return 0', () => {
-      MainSection.todos = MainSection.state.todos;
-      expect(MainSection.computed.completedCount.call(MainSection)).toEqual(0);
+      MainSection.budgetItems = MainSection.state.budgetItems;
+      expect(MainSection.computed.appliedCount.call(MainSection)).toEqual(0);
     });
 
     it('should return 1', () => {
-      MainSection.todos = MainSection.state.todos;
-      MainSection.completedCount = 0;
+      MainSection.budgetItems = MainSection.state.budgetItems;
+      MainSection.appliedCount = 0;
       expect(MainSection.computed.activeCount.call(MainSection)).toEqual(1);
     });
 
@@ -36,16 +36,16 @@ describe('MainSection', () => {
   });
 
   describe('methods', () => {
-    it('should call actions.completeAll', () => {
-      const completeAll = jasmine.createSpy('completeAll');
-      MainSection.completeAll = completeAll;
-      MainSection.methods.handleCompleteAll.call(MainSection);
-      expect(completeAll).toHaveBeenCalled();
+    it('should call actions.applyAll', () => {
+      const applyAll = jasmine.createSpy('applyAll');
+      MainSection.applyAll = applyAll;
+      MainSection.methods.handleapplyAll.call(MainSection);
+      expect(applyAll).toHaveBeenCalled();
     });
 
     it('should set this.filter', () => {
-      MainSection.methods.handleShow.call(MainSection, 'show_completed');
-      expect(MainSection.mainFilter).toEqual('show_completed');
+      MainSection.methods.handleShow.call(MainSection, 'show_applied');
+      expect(MainSection.mainFilter).toEqual('show_applied');
     });
   });
 });

@@ -4,7 +4,7 @@
       class="toggle-all"
       type="checkbox"
       v-model="checked"
-      v-on:click="handleSlashAll"
+      v-on:click="handleApplyAll"
       />
     <ul>
       <budget-item
@@ -13,7 +13,7 @@
       ></budget-item>
     </ul>
     <footer-component v-if="budgetItems.length"
-      :slashed-count="slashedCount"
+      :applied-count="appliedCount"
       :active-count="activeCount"
       :selected-filter="selectedFilter"
       :on-show="handleShow"
@@ -38,25 +38,25 @@ export default {
   computed: {
     ...mapGetters(['budgetItems']),
     checked() {
-      return this.slashedCount === this.budgetItems.length;
+      return this.appliedCount === this.budgetItems.length;
     },
-    slashedCount() {
+    appliedCount() {
       return this.budgetItems.reduce((count, item) =>
-        item.slashed ? count + 1 : count,
+        item.applied ? count + 1 : count,
         0
       );
     },
     activeCount() {
-      return this.budgetItems.length - this.slashedCount;
+      return this.budgetItems.length - this.appliedCount;
     },
     selectedFilter() {
       return VisibilityFilters[this.mainFilter];
     }
   },
   methods: {
-    ...mapActions(['slashAll']),
-    handleSlashAll() {
-      this.slashAll();
+    ...mapActions(['applyAll']),
+    handleApplyAll() {
+      this.applyAll();
     },
     handleShow(filter) {
       this.mainFilter = filter;

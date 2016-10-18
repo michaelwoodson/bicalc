@@ -13,19 +13,19 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {SHOW_ALL, SHOW_SLASHED, SHOW_ACTIVE} from '../constants/BudgetItemFilters';
+import {SHOW_ALL, SHOW_APPLIED, SHOW_ACTIVE} from '../constants/BudgetItemFilters';
 
 const filterTitles = {
   [SHOW_ALL]: 'All',
   [SHOW_ACTIVE]: 'Active',
-  [SHOW_SLASHED]: 'Slashed'
+  [SHOW_APPLIED]: 'Applied'
 };
 
-const filters = [SHOW_ALL, SHOW_ACTIVE, SHOW_SLASHED];
+const filters = [SHOW_ALL, SHOW_ACTIVE, SHOW_APPLIED];
 
 export default {
   name: 'Footer',
-  props: ['activeCount', 'slashedCount', 'selectedFilter', 'onShow'],
+  props: ['activeCount', 'appliedCount', 'selectedFilter', 'onShow'],
   data() {
     return {filterTitles, filters};
   }

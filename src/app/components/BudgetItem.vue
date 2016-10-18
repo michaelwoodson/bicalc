@@ -1,10 +1,10 @@
 <template>
-  <li v-bind:class="{'slashed': budgetItem.slashed}">
-    <label class="view" v-if="!editing">
+  <li v-bind:class="{'applied': budgetItem.applied}">
+    <label class="view">
       <input
         class="toggle"
         type="checkbox"
-        v-model="budgetItem.slashed"
+        v-model="budgetItem.applied"
         v-on:click="handleChange(budgetItem.id)"
         />
       {{budgetItem.text}}
@@ -24,9 +24,9 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['slashBudgetItem']),
+    ...mapActions(['applyBudgetItem']),
     handleChange(id) {
-      this.slashBudgetItem(id);
+      this.applyBudgetItem(id);
     },
   }
 };
