@@ -26,7 +26,7 @@ describe('MainSection', () => {
     it('should return 1', () => {
       MainSection.budgetItems = MainSection.state.budgetItems;
       MainSection.appliedCount = 0;
-      expect(MainSection.computed.activeCount.call(MainSection)).toEqual(1);
+      expect(MainSection.computed.availableCount.call(MainSection)).toEqual(1);
     });
 
     it(`should return 'show_all'`, () => {

@@ -2,7 +2,7 @@ import Footer from './Footer.vue';
 
 describe('Footer', () => {
   it('should have correct props', () => {
-    expect(Footer.props).toEqual(['activeCount', 'appliedCount', 'selectedFilter', 'onShow']);
+    expect(Footer.props).toEqual(['availableCount', 'appliedCount', 'selectedFilter', 'onShow']);
   });
 
   it('should return filterTitles and filters', () => {

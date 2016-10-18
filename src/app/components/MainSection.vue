@@ -14,7 +14,7 @@
     </ul>
     <footer-component v-if="budgetItems.length"
       :applied-count="appliedCount"
-      :active-count="activeCount"
+      :available-count="availableCount"
       :selected-filter="selectedFilter"
       :on-show="handleShow"
     ></footer-component>
@@ -46,7 +46,7 @@ export default {
         0
       );
     },
-    activeCount() {
+    availableCount() {
       return this.budgetItems.length - this.appliedCount;
     },
     selectedFilter() {

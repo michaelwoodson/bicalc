@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <span>
-      <strong>{{activeCount || 'No'}}</strong> {{activeCount === 1 ? 'item' : 'items'}} left
+      <strong>{{availableCount || 'No'}}</strong> {{availableCount === 1 ? 'item' : 'items'}} left
     </span>
     <ul class="filters">
       <li v-for="filter in filters">
@@ -13,19 +13,19 @@
 
 <script>
 import {mapActions} from 'vuex';
-import {SHOW_ALL, SHOW_APPLIED, SHOW_ACTIVE} from '../constants/BudgetItemFilters';
+import {SHOW_ALL, SHOW_APPLIED, SHOW_AVAILABLE} from '../constants/BudgetItemFilters';
 
 const filterTitles = {
   [SHOW_ALL]: 'All',
-  [SHOW_ACTIVE]: 'Active',
+  [SHOW_AVAILABLE]: 'Available',
   [SHOW_APPLIED]: 'Applied'
 };
 
-const filters = [SHOW_ALL, SHOW_ACTIVE, SHOW_APPLIED];
+const filters = [SHOW_ALL, SHOW_AVAILABLE, SHOW_APPLIED];
 
 export default {
   name: 'Footer',
-  props: ['activeCount', 'appliedCount', 'selectedFilter', 'onShow'],
+  props: ['availableCount', 'appliedCount', 'selectedFilter', 'onShow'],
   data() {
     return {filterTitles, filters};
   }
