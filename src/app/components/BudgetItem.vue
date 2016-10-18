@@ -1,14 +1,14 @@
 <template>
   <li v-bind:class="{'slashed': budgetItem.slashed}">
-    <div class="view" v-if="!editing">
+    <label class="view" v-if="!editing">
       <input
         class="toggle"
         type="checkbox"
         v-model="budgetItem.slashed"
         v-on:click="handleChange(budgetItem.id)"
         />
-      <label v-on:click="handleChange(budgetItem.id)">{{budgetItem.text}}</label>
-    </div>
+      {{budgetItem.text}}
+    </label>
   </li>
 </template>
 

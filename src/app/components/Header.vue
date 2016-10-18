@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <h1>Basic income calculator</h1>
-    <p>Pop: {{320000000 | nicenumber}}</p>
+    <p>Pop: {{population | nicenumber}}</p>
   </header>
 </template>
 
@@ -9,6 +9,11 @@
 import {mapActions} from 'vuex';
 
 export default {
-  name: 'Header'
+  name: 'Header',
+  computed: {
+    population () {
+      return this.$store.state.population
+    }
+  }
 };
 </script>
