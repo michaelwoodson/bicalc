@@ -8,6 +8,7 @@
         <a v-bind:style="{cursor: 'pointer'}" v-bind:class="{'selected': filter === selectedFilter.type}" v-on:click="onShow(filter)">{{filterTitles[filter]}}</a>
       </li>
     </ul>
+    <h1>${{basicIncome | money}} / Month</h1>
   </footer>
 </template>
 
@@ -28,6 +29,11 @@ export default {
   props: ['availableCount', 'appliedCount', 'selectedFilter', 'onShow'],
   data() {
     return {filterTitles, filters};
+  },
+  computed: {
+    basicIncome () {
+      return this.$store.getters.basicIncome
+    }
   }
 };
 </script>

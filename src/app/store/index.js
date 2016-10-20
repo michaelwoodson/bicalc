@@ -10,6 +10,13 @@ export default new Vuex.Store({
   mutations,
   actions,
   getters: {
-    budgetItems: state => state.budgetItems
+    budgetItems: state => state.budgetItems,
+    adjustedPopulation: state => state.population - state.federalEmployees - state.socialSecurityRecipients - state.incarcerated,
+    basicIncome: (state, getters) => {
+      return state.budgetItems
+        .filter(item => item.applied)
+        .map(item => item.amount)
+        .reduce((a1, a2) => a1 + a2, 0) / getters.adjustedPopulation / 12;
+    }
   }
 });

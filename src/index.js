@@ -9,6 +9,10 @@ Vue.filter('nicenumber', value => {
   return numeral(value).format('0.0a');
 });
 
+Vue.filter('money', value => {
+  return numeral(value).format('0,0');
+});
+
 export default new Vue({
   el: '#root',
   store,
