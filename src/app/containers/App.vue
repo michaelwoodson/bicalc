@@ -1,12 +1,17 @@
 <template>
   <div id="root">
-    <header-component></header-component>
+    <header class="header">
+      <h1>Basic income calculator</h1>
+      <p>Pop: {{population | nicenumber}}</p>
+      <alert type="success">
+        Hello?
+      </alert>
+    </header>
     <main-section :filter="filter"></main-section>
   </div>
 </template>
 
 <script>
-import Header from '../components/Header.vue';
 import MainSection from '../components/MainSection.vue';
 import {SHOW_ALL} from '../constants/BudgetItemFilters';
 
@@ -18,8 +23,12 @@ export default {
     };
   },
   components: {
-    'header-component': Header,
     'main-section': MainSection
+  },
+  computed: {
+    population () {
+      return this.$store.state.population
+    }
   }
 };
 </script>
