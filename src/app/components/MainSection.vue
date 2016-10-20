@@ -12,12 +12,17 @@
         :budgetItem="budgetItem"
       ></budget-item>
     </ul>
-    <footer-component v-if="budgetItems.length"
-      :applied-count="appliedCount"
-      :available-count="availableCount"
-      :selected-filter="selectedFilter"
-      :on-show="handleShow"
-    ></footer-component>
+    <footer class="footer">
+      <span>
+        <strong>{{availableCount || 'No'}}</strong> {{availableCount === 1 ? 'item' : 'items'}} left
+      </span>
+      <ul class="filters">
+        <li v-for="filter in filters">
+          <a v-bind:style="{cursor: 'pointer'}" v-bind:class="{'selected': filter === selectedFilter.type}" v-on:click="onShow(filter)">{{filterTitles[filter]}}</a>
+        </li>
+      </ul>
+      <h1>${{basicIncome | money}} / Month</h1>
+    </footer>
   </section>
 </template>
 
@@ -25,13 +30,23 @@
 import {mapActions, mapGetters} from 'vuex';
 import VisibilityFilters from '../constants/VisibilityFilters';
 import BudgetItem from './BudgetItem.vue';
-import Footer from './Footer.vue';
+import {SHOW_ALL, SHOW_APPLIED, SHOW_AVAILABLE} from '../constants/BudgetItemFilters';
+
+const filterTitles = {
+  [SHOW_ALL]: 'All',
+  [SHOW_AVAILABLE]: 'Available',
+  [SHOW_APPLIED]: 'Applied'
+};
+
+const filters = [SHOW_ALL, SHOW_AVAILABLE, SHOW_APPLIED];
 
 export default {
   name: 'MainSection',
   props: ['filter'],
   data() {
     return {
+      filterTitles,
+      filters,
       mainFilter: this.filter
     };
   },
@@ -51,6 +66,9 @@ export default {
     },
     selectedFilter() {
       return VisibilityFilters[this.mainFilter];
+    },
+    basicIncome () {
+      return this.$store.getters.basicIncome
     }
   },
   methods: {
@@ -58,13 +76,12 @@ export default {
     handleApplyAll() {
       this.applyAll();
     },
-    handleShow(filter) {
+    onShow(filter) {
       this.mainFilter = filter;
     }
   },
   components: {
-    'budget-item': BudgetItem,
-    'footer-component': Footer
+    'budget-item': BudgetItem
   }
 };
 </script>
