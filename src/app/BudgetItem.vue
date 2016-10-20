@@ -20,7 +20,6 @@ export default {
   props: ['budgetItem'],
   data() {
     return {
-      editing: false
     };
   },
   methods: {

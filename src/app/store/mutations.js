@@ -1,4 +1,4 @@
-import * as ActionTypes from '../constants/ActionTypes';
+import * as ActionTypes from '../ActionTypes';
 
 // Federal employees:
 // https://www.opm.gov/policy-data-oversight/data-analysis-documentation/federal-employment-reports/historical-tables/total-government-employment-since-1962/

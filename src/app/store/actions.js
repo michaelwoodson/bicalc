@@ -1,4 +1,4 @@
-import * as types from '../constants/ActionTypes';
+import * as types from '../ActionTypes';
 
 const makeAction = type => ({commit}, ...args) => commit(type, ...args);
 

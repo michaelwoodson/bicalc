@@ -3,7 +3,7 @@ import Vue from 'vue';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {alert} from 'vue-strap';
 
-import App from './app/containers/App.vue';
+import App from './app/App.vue';
 import store from './app/store/index';
 import numeral from 'numeral';
 

@@ -1,5 +1,5 @@
 import mutations from './mutations';
-import * as types from '../constants/ActionTypes';
+import * as types from '../ActionTypes';
 
 describe('budget items reducer', () => {
   it('should handle SLASH_BUDGET_ITEM', () => {

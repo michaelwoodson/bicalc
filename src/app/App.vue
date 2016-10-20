@@ -32,8 +32,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-
-import BudgetItem from '../components/BudgetItem.vue';
+import BudgetItem from './BudgetItem.vue';
 
 export default {
   name: 'App',
