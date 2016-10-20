@@ -2,6 +2,9 @@
   <header class="header">
     <h1>Basic income calculator</h1>
     <p>Pop: {{population | nicenumber}}</p>
+    <alert type="success">
+      Hello?
+    </alert>
   </header>
 </template>
 

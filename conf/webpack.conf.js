@@ -43,6 +43,10 @@ module.exports = {
         loaders: [
           'vue'
         ]
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: 'url-loader?limit=100000'
       }
     ]
   },
@@ -59,6 +63,11 @@ module.exports = {
   output: {
     path: path.join(process.cwd(), conf.paths.tmp),
     filename: 'index.js'
+  },
+  resolve: {
+    alias: {
+      vue: 'vue/dist/vue.js'
+    }
   },
   entry: `./${conf.path.src('index')}`
 };
