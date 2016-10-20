@@ -6,7 +6,6 @@ import {alert} from 'vue-strap';
 import App from './app/containers/App.vue';
 import store from './app/store/index';
 import numeral from 'numeral';
-console.log(numeral(3200000000000).format('0.0a'));
 
 Vue.filter('nicenumber', value => {
   return numeral(value).format('0.0a');
