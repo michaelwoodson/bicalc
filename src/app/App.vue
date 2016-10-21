@@ -5,23 +5,13 @@
       <h1>Basic income calculator</h1>
       <p>Pop: {{population | nicenumber}}</p>
     </nav>
-    <label>
-      <input v-if="budgetItems.length"
-        class="toggle-all"
-        type="checkbox"
-        v-model="checked"
-        v-on:click="handleApplyAll"
-        />
-      Select all/none
-    </label>
-    <accordion v-for="group in revenueGroups" :one-at-atime="checked" type="info">
-      <panel :header="group.label">
-        <budget-item
-          v-for="budgetItem in group.items"
-          :budgetItem="budgetItem"
-        ></budget-item>
-      </panel>
-    </accordion>
+    <div v-for="group in revenueGroups" class="card p-1">
+      <b-collapse-toggle :target="group.id"><h3 class="toggler">{{group.label}}</h3></b-collapse-toggle>
+      <b-collapse :id="group.id">
+        Select: <a href="#" @click.prevent.stop="handleApply(group.id, true)">All</a> / <a href="" @click.prevent.stop="handleApply(group.id, false)">None</a>
+        <budget-item v-for="budgetItem in group.items" :budgetItem="budgetItem"></budget-item>
+      </b-collapse>
+    </div>
     <footer class="footer">
       <span>
         <strong>{{availableCount || 'No'}}</strong> {{availableCount === 1 ? 'item' : 'items'}} left
@@ -62,16 +52,16 @@ export default {
     },
     revenueGroups() {
       return[
-        {label: 'Spending Cuts', items: this.spendingCuts},
-        {label: 'Tax Preference Adjustments', items: this.taxPreferenceAdjustments},
-        {label: 'Tax Increases', items: this.taxIncreases}
+        {label: 'Spending Cuts', id: 'spendingCuts', items: this.spendingCuts},
+        {label: 'Tax Preference Adjustments', id: 'taxPreferenceAdjustments', items: this.taxPreferenceAdjustments},
+        {label: 'Tax Increases', id: 'taxIncreases', items: this.taxIncreases}
       ];
     }
   },
   methods: {
-    ...mapActions(['applyAll']),
-    handleApplyAll() {
-      this.applyAll();
+    ...mapActions(['apply']),
+    handleApply(what, applied) {
+      this.apply({what, applied});
     }
   },
   components: {
@@ -80,3 +70,9 @@ export default {
 };
 
 </script>
+
+<style>
+  .toggler {
+    cursor: pointer;
+  }
+</style>

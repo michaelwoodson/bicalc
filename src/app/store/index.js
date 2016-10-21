@@ -10,13 +10,13 @@ export default new Vuex.Store({
   mutations,
   actions,
   getters: {
-    budgetItems: state => state.budgetItems,
     spendingCuts: state => state.spendingCuts,
     taxPreferenceAdjustments: state => state.taxPreferenceAdjustments,
     taxIncreases: state => state.taxIncreases,
     adjustedPopulation: state => state.population - state.federalEmployees - state.socialSecurityRecipients - state.incarcerated,
+    budgetItems: state => [...state.spendingCuts, ...state.taxPreferenceAdjustments, ...state.taxIncreases],
     basicIncome: (state, getters) => {
-      return state.budgetItems
+      return getters.budgetItems
         .filter(item => item.applied)
         .map(item => item.amount)
         .reduce((a1, a2) => a1 + a2, 0) / getters.adjustedPopulation / 12;

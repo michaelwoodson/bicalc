@@ -22,10 +22,10 @@ addSpendingCut('Reduce Funding for International Affairs Programs (28)', 10);
 addSpendingCut('Eliminate Human Space Exploration Programs (29)', 8);
 addSpendingCut('Limit Highway Funding to Expected Highway Revenues (33)', 7.5);
 addSpendingCut('Reduce the Size of the Federal Workforce Through Attrition (42)', 4);
+addSpendingCut('Eliminate the Add-On to Pell Grants That Is Funded With Mandatory Spending (6)', 7.5);
+addSpendingCut('Eliminate Concurrent Receipt of Retirement Pay and Disability Compensation for Disabled Veterans (7)', 10);
 
 addTaxPreferenceAdjustment('Eliminate Child Tax Credit', 52);
-addTaxPreferenceAdjustment('Eliminate the Add-On to Pell Grants That Is Funded With Mandatory Spending (6)', 7.5);
-addTaxPreferenceAdjustment('Eliminate Concurrent Receipt of Retirement Pay and Disability Compensation for Disabled Veterans (7)', 10);
 addTaxPreferenceAdjustment('Use an Alternative Measure of Inflation to Index Social Security and Other Mandatory Programs (21)', 15);
 addTaxPreferenceAdjustment('Curtail the Deduction for Charitable Giving (52)', 20);
 addTaxPreferenceAdjustment('Include All Income That U.S. Citizens Earn Abroad in Taxable Income (54)', 9);
@@ -83,10 +83,10 @@ export default {
         item
     );
   },
-  [ActionTypes.APPLY_ALL](state) {
-    const areAllApplied = state.budgetItems.every(item => item.applied);
-    state.budgetItems = state.budgetItems.map(item => Object.assign({}, item, {
-      applied: !areAllApplied
+  [ActionTypes.APPLY](state, data) {
+    console.log(JSON.stringify(data));
+    state[data.what] = state[data.what].map(item => Object.assign({}, item, {
+      applied: data.applied
     }));
   }
 };
