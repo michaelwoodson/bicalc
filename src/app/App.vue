@@ -1,22 +1,18 @@
 <template>
   <div id="root" class="container">
-    <nav class="navbar navbar-default">
-      <h1 class="navbar-right">${{basicIncome | money}} / Month</h1>
-      <h1>Basic income calculator</h1>
-      <p>Pop: {{population | nicenumber}}</p>
+    <nav class="navbar navbar-fixed-top navbar-light bg-faded">
+      <span class="navbar-text">${{basicIncome | money}} / Month</span>
     </nav>
+    <div class="row">
+    <h1>Basic income calculator</h1>
     <div v-for="group in revenueGroups" class="card p-1">
-      <b-collapse-toggle :target="group.id"><h3 class="toggler">{{group.label}}</h3></b-collapse-toggle>
+      <b-collapse-toggle :target="group.id"><h3 class="toggler">{{group.label}} ({{countApplied(group.items)}}/{{group.items.length}})</h3></b-collapse-toggle>
       <b-collapse :id="group.id">
         Select: <a href="#" @click.prevent.stop="handleApply(group.id, true)">All</a> / <a href="" @click.prevent.stop="handleApply(group.id, false)">None</a>
         <budget-item v-for="budgetItem in group.items" :budgetItem="budgetItem"></budget-item>
       </b-collapse>
     </div>
-    <footer class="footer">
-      <span>
-        <strong>{{availableCount || 'No'}}</strong> {{availableCount === 1 ? 'item' : 'items'}} left
-      </span>
-    </footer>
+    <p>Pop: {{population | nicenumber}}</p>
   </div>
 </template>
 
@@ -34,15 +30,6 @@ export default {
     ...mapGetters(['budgetItems', 'spendingCuts', 'taxPreferenceAdjustments', 'taxIncreases']),
     checked() {
       return this.appliedCount === this.budgetItems.length;
-    },
-    appliedCount() {
-      return this.budgetItems.reduce((count, item) =>
-        item.applied ? count + 1 : count,
-        0
-      );
-    },
-    availableCount() {
-      return this.budgetItems.length - this.appliedCount;
     },
     population () {
       return this.$store.state.population;
@@ -62,6 +49,9 @@ export default {
     ...mapActions(['apply']),
     handleApply(what, applied) {
       this.apply({what, applied});
+    },
+    countApplied(items) {
+      return items.filter(item => item.applied).length;
     }
   },
   components: {
@@ -72,7 +62,10 @@ export default {
 </script>
 
 <style>
-  .toggler {
+  label, .toggler {
     cursor: pointer;
+  }
+  body { 
+    padding-top: 65px; 
   }
 </style>
