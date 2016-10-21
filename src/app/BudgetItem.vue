@@ -1,5 +1,5 @@
 <template>
-  <li v-bind:class="{'applied': budgetItem.applied}">
+  <div v-bind:class="{'applied': budgetItem.applied}">
     <label class="view">
       <input
         class="toggle"
@@ -9,7 +9,7 @@
         />
       {{budgetItem.text}}
     </label>
-  </li>
+  </div>
 </template>
 
 <script>

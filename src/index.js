@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {alert} from 'vue-strap';
+import {accordion, alert, panel} from 'vue-strap';
 
 import App from './app/App.vue';
 import store from './app/store/index';
@@ -15,7 +15,9 @@ Vue.filter('money', value => {
   return numeral(value).format('0,0');
 });
 
+Vue.component('accordion', accordion);
 Vue.component('alert', alert);
+Vue.component('panel', panel);
 
 export default new Vue({
   el: '#root',

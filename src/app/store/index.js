@@ -11,6 +11,9 @@ export default new Vuex.Store({
   actions,
   getters: {
     budgetItems: state => state.budgetItems,
+    spendingCuts: state => state.spendingCuts,
+    taxPreferenceAdjustments: state => state.taxPreferenceAdjustments,
+    taxIncreases: state => state.taxIncreases,
     adjustedPopulation: state => state.population - state.federalEmployees - state.socialSecurityRecipients - state.incarcerated,
     basicIncome: (state, getters) => {
       return state.budgetItems
