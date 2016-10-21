@@ -1,32 +1,34 @@
 <template>
-  <div id="root">
-    <header class="header">
+  <div id="root" class="container">
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <h1 class="navbar-right">${{basicIncome | money}} / Month</h1>
       <h1>Basic income calculator</h1>
       <p>Pop: {{population | nicenumber}}</p>
-      <alert type="success">
-        Hello?
-      </alert>
-    </header>
+    </nav>
     <section class="main">
-      <input v-if="budgetItems.length"
-        class="toggle-all"
-        type="checkbox"
-        v-model="checked"
-        v-on:click="handleApplyAll"
-        />
       <ul>
+        <li>
+          <label>
+            <input v-if="budgetItems.length"
+              class="toggle-all"
+              type="checkbox"
+              v-model="checked"
+              v-on:click="handleApplyAll"
+              />
+            Select all/none
+          </label>
+        </li>
         <budget-item
           v-for="budgetItem in budgetItems"
           :budgetItem="budgetItem"
         ></budget-item>
       </ul>
-      <footer class="footer">
-        <span>
-          <strong>{{availableCount || 'No'}}</strong> {{availableCount === 1 ? 'item' : 'items'}} left
-        </span>
-        <h1>${{basicIncome | money}} / Month</h1>
-      </footer>
     </section>
+    <footer class="footer">
+      <span>
+        <strong>{{availableCount || 'No'}}</strong> {{availableCount === 1 ? 'item' : 'items'}} left
+      </span>
+    </footer>
   </div>
 </template>
 
