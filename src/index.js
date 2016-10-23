@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import BootstrapVue from 'bootstrap-vue/components/index';
+import BootstrapVue from 'bootstrap-vue';
 
 import App from './app/App.vue';
 import store from './app/store/index';

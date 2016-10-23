@@ -17,15 +17,37 @@ export const initialState = {
   taxIncreases: []
 };
 
-addSpendingCut('Eliminate SNAP', 75);
+// CBO Outlook 2017
+addSpendingCut('Defense (Discretionary)', 592);
+addSpendingCut('Disability Insurance', 154);
+addSpendingCut('Supplemental Nutrition Assistance Program', 76);
+addSpendingCut('Supplemental Security Income', 57);
+// Note that unemployment has a revenue stream.'
+addSpendingCut('Unemployment compensation', 37);
+addSpendingCut('Family support and foster care', 32);
+addSpendingCut('Child nutrition', 23);
 addSpendingCut('Reduce Funding for International Affairs Programs (28)', 10);
 addSpendingCut('Eliminate Human Space Exploration Programs (29)', 8);
 addSpendingCut('Limit Highway Funding to Expected Highway Revenues (33)', 7.5);
 addSpendingCut('Reduce the Size of the Federal Workforce Through Attrition (42)', 4);
 addSpendingCut('Eliminate the Add-On to Pell Grants That Is Funded With Mandatory Spending (6)', 7.5);
 addSpendingCut('Eliminate Concurrent Receipt of Retirement Pay and Disability Compensation for Disabled Veterans (7)', 10);
+// CBO Outlook 2017
+// addSpendingCut('Social Security - Old-Age and Survivors Insurance', 817);
 
-addTaxPreferenceAdjustment('Eliminate Child Tax Credit', 52);
+// http://www.pewresearch.org/fact-tank/2016/04/06/the-biggest-u-s-tax-breaks/
+// addTaxPreferenceAdjustment('Employer-paid health care, health insurance, and long-term care insurance', 143.8);
+addTaxPreferenceAdjustment('Lower tax rates on dividends and long-term capital gains', 134.6);
+addTaxPreferenceAdjustment('Deferal of active income of controlled foreign corporations', 108.9);
+addTaxPreferenceAdjustment('Contributions to and earnings of defined-contribution retirement plans', 82.7);
+addTaxPreferenceAdjustment('Mortgage interest deduction for owner occupied residences', 77.0);
+addTaxPreferenceAdjustment('Deductibility of (nonbusiness) state and local income, sales, and personal property taxes', 65.1);
+addTaxPreferenceAdjustment('Contirbutions to and earnings of defined-benefit pension plans', 57.4);
+addTaxPreferenceAdjustment('Subsidies for insurance purchased through health benefit exchanges', 53.5);
+
+// CBO Outlook 2017
+addTaxPreferenceAdjustment('Increase the Maximum Taxable Earnings for the Social Security Payroll Tax (60)', 65);
+addTaxPreferenceAdjustment('Earned income, child, and other tax credits', 90);
 addTaxPreferenceAdjustment('Use an Alternative Measure of Inflation to Index Social Security and Other Mandatory Programs (21)', 15);
 addTaxPreferenceAdjustment('Curtail the Deduction for Charitable Giving (52)', 20);
 addTaxPreferenceAdjustment('Include All Income That U.S. Citizens Earn Abroad in Taxable Income (54)', 9);
@@ -39,7 +61,6 @@ addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
 addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
 addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
 addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
-addTaxIncrease('Increase the Maximum Taxable Earnings for the Social Security Payroll Tax (60)', 65);
 addTaxIncrease('Increase the Payroll Tax Rate for Medicare Hospital Insurance by 1 Percentage Point (61)', 75);
 addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10);
 addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10);
@@ -84,7 +105,6 @@ export default {
     );
   },
   [ActionTypes.APPLY](state, data) {
-    console.log(JSON.stringify(data));
     state[data.what] = state[data.what].map(item => Object.assign({}, item, {
       applied: data.applied
     }));
