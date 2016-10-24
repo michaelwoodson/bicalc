@@ -18,10 +18,6 @@ import {mapActions} from 'vuex';
 export default {
   name: 'BudgetItem',
   props: ['budgetItem'],
-  data() {
-    return {
-    };
-  },
   methods: {
     ...mapActions(['applyBudgetItem']),
     handleChange(id) {
