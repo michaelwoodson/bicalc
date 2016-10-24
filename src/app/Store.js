@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import * as ActionTypes from '../ActionTypes';
+import * as ActionTypes from './ActionTypes';
 import * as actions from './actions';
 
 Vue.use(Vuex);
@@ -115,7 +115,7 @@ export default new Vuex.Store({
       state[data.what] = state[data.what].map(item => Object.assign({}, item, {
         applied: data.applied
       }));
-    },
+    }
   },
   actions,
   getters: {

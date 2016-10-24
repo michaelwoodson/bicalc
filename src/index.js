@@ -3,7 +3,7 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 
 import App from './app/App.vue';
-import store from './app/store/index';
+import store from './app/Store';
 import numeral from 'numeral';
 
 Vue.filter('nicenumber', value => {
