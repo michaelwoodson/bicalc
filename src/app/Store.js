@@ -23,11 +23,12 @@ export const initialState = {
 };
 
 // CBO Outlook 2017
-addSpendingCut('Defense (Discretionary)', 59.2, [
-  {text: '10%', value: 59.2},
-  {text: '20%', value: 118.4},
-  {text: '50%', value: 296},
-  {text: '80%', value: 473.6}
+const MILITARY_TOTAL = 592;
+addSpendingCut('Military (Discretionary)', 0.1 * MILITARY_TOTAL, [
+  {text: '10%', value: 0.1 * MILITARY_TOTAL},
+  {text: '20%', value: 0.2 * MILITARY_TOTAL},
+  {text: '50%', value: 0.5 * MILITARY_TOTAL},
+  {text: '80%', value: 0.8 * MILITARY_TOTAL}
 ]);
 addSpendingCut('Disability Insurance', 154);
 addSpendingCut('Supplemental Nutrition Assistance Program', 76);
