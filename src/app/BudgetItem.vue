@@ -9,6 +9,9 @@
         />
       {{budgetItem.text}}
     </label>
+    <select v-if="budgetItem.options" v-model="budgetItem.amount">
+      <option v-for="option in budgetItem.options" :value="option.value">{{option.text}}</option>
+    </select>
   </div>
 </template>
 

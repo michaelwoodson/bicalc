@@ -23,7 +23,12 @@ export const initialState = {
 };
 
 // CBO Outlook 2017
-addSpendingCut('Defense (Discretionary)', 592);
+addSpendingCut('Defense (Discretionary)', 59.2, [
+  {text: '10%', value: 59.2},
+  {text: '20%', value: 118.4},
+  {text: '50%', value: 296},
+  {text: '80%', value: 473.6}
+]);
 addSpendingCut('Disability Insurance', 154);
 addSpendingCut('Supplemental Nutrition Assistance Program', 76);
 addSpendingCut('Supplemental Security Income', 57);
@@ -61,42 +66,49 @@ addTaxPreferenceAdjustment('Eliminate Certain Tax Preferences for Education Expe
 addTaxPreferenceAdjustment('Extend the Period for Depreciating the Cost of Certain Investments (66)', 22);
 addTaxPreferenceAdjustment('Repeal the Deduction for Domestic Production Activities (67)', 19);
 
-addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
-addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
-addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
-addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
-addTaxIncrease('Increase Individual Income Tax Rates (46)', 65);
-addTaxIncrease('Increase the Payroll Tax Rate for Medicare Hospital Insurance by 1 Percentage Point (61)', 75);
-addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10);
-addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10);
-addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10);
-addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10);
-addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10);
+addTaxIncrease('Increase Individual Income Tax Rates (46)', 65, [
+  {text: '1%', value: 65},
+  {text: '2%', value: 130},
+  {text: '5%', value: 325},
+  {text: '10%', value: 650}
+]);
+addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10, [
+  {text: '1%', value: 10},
+  {text: '2%', value: 20},
+  {text: '5%', value: 50},
+  {text: '10%', value: 100}
+]);
 addTaxIncrease('Increase Excise Taxes on Motor Fuels by 35 Cents and Index for Inflation (45)', 45);
 addTaxIncrease('Increase All Taxes on Alcoholic Beverages to $16 per Proof Gallon (71)', 6.5);
 addTaxIncrease('Increase the Excise Tax on Cigarettes by 50 Cents per Pack (79)', 3.2);
 
 let idCounter = 0;
 
-function addSpendingCut(text, amountBillions) {
-  initialState.spendingCuts.push(addItem(text, amountBillions));
+function addSpendingCut(text, amountBillions, options) {
+  initialState.spendingCuts.push(addItem(text, amountBillions, options));
 }
 
-function addTaxPreferenceAdjustment(text, amountBillions) {
-  initialState.taxPreferenceAdjustments.push(addItem(text, amountBillions));
+function addTaxPreferenceAdjustment(text, amountBillions, options) {
+  initialState.taxPreferenceAdjustments.push(addItem(text, amountBillions, options));
 }
 
-function addTaxIncrease(text, amountBillions) {
-  initialState.taxIncreases.push(addItem(text, amountBillions));
+function addTaxIncrease(text, amountBillions, options) {
+  initialState.taxIncreases.push(addItem(text, amountBillions, options));
 }
 
-function addItem(text, amountBillions) {
+function addItem(text, amountBillions, options) {
   const item = {
     text,
     amount: amountBillions * 1000000000,
     applied: true,
     id: idCounter++
   };
+  if (options) {
+    item.options = options;
+    options.forEach(o => {
+      o.value *= 1000000000;
+    });
+  }
   initialState.budgetItems.push(item);
   return item;
 }
