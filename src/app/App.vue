@@ -1,3 +1,4 @@
+
 <template>
   <div id="root" class="container">
     <nav class="navbar navbar-fixed-top navbar-light bg-faded">
@@ -12,7 +13,18 @@
         <budget-item v-for="budgetItem in group.items" :budgetItem="budgetItem"></budget-item>
       </b-collapse>
     </div>
-    <p>Pop: {{population | nicenumber}}</p>
+    <p>Pop: {{population | nicenumber}} <button @click.prevent.stop="showHelp">?</button></p>
+    <b-modal id="help" ref="help">
+      <div slot="modal-header">
+        Header
+      </div>
+      <div slot="modal-body">
+        Body
+      </div>
+      <div slot="modal-footer">
+        <button class="btn btn-primary" @click.prevent.stop="hideHelp">Got it!</button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -52,6 +64,12 @@ export default {
     },
     countApplied(items) {
       return items.filter(item => item.applied).length;
+    },
+    showHelp() {
+      this.$refs.help.show();
+    },
+    hideHelp() {
+      this.$refs.help.hide();
     }
   },
   components: {
