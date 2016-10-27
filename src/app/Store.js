@@ -11,7 +11,10 @@ Vue.use(Vuex);
 // https://www.ssa.gov/policy/docs/quickfacts/stat_snapshot/
 // Incarcerated population:
 // https://en.wikipedia.org/wiki/Incarceration_in_the_United_States
-export const initialState = {
+const CBO_OUTLOOK = 'CBO_OUTLOOK';
+const CBO_BUDGET_OPTIONS = 'CBO_BUDGET_OPTIONS';
+const BIGGEST_TAX_BREAKS = 'BIGGEST_TAX_BREAKS';
+const initialState = {
   population: 325000000,
   federalEmployees: 4185000,
   socialSecurityRecipients: 65764000,
@@ -19,85 +22,258 @@ export const initialState = {
   budgetItems: [],
   spendingCuts: [],
   taxPreferenceAdjustments: [],
-  taxIncreases: []
+  taxIncreases: [],
+  sources: {
+    [CBO_OUTLOOK]: {url: 'https://www.cbo.gov/sites/default/files/114th-congress-2015-2016/reports/51908-2016_Outlook_Update_OneCol-2.pdf'},
+    [CBO_BUDGET_OPTIONS]: {url: 'https://www.cbo.gov/sites/default/files/cbofiles/attachments/49638-BudgetOptions.pdf'},
+    [BIGGEST_TAX_BREAKS]: {url: 'http://www.pewresearch.org/fact-tank/2016/04/06/the-biggest-u-s-tax-breaks/'}
+  }
 };
 
 // CBO Outlook 2017
 const MILITARY_TOTAL = 592;
-addSpendingCut('Military (Discretionary)', 0.1 * MILITARY_TOTAL, [
-  {text: '10%', value: 0.1 * MILITARY_TOTAL},
-  {text: '20%', value: 0.2 * MILITARY_TOTAL},
-  {text: '50%', value: 0.5 * MILITARY_TOTAL},
-  {text: '80%', value: 0.8 * MILITARY_TOTAL}
-]);
-addSpendingCut('Disability Insurance', 154);
-addSpendingCut('Supplemental Nutrition Assistance Program', 76);
-addSpendingCut('Supplemental Security Income', 57);
-// Note that unemployment has a revenue stream.'
-addSpendingCut('Unemployment compensation', 37);
-addSpendingCut('Family support and foster care', 32);
-addSpendingCut('Child nutrition', 23);
-addSpendingCut('Reduce Funding for International Affairs Programs (28)', 10);
-addSpendingCut('Eliminate Human Space Exploration Programs (29)', 8);
-addSpendingCut('Limit Highway Funding to Expected Highway Revenues (33)', 7.5);
-addSpendingCut('Reduce the Size of the Federal Workforce Through Attrition (42)', 4);
-addSpendingCut('Eliminate the Add-On to Pell Grants That Is Funded With Mandatory Spending (6)', 7.5);
-addSpendingCut('Eliminate Concurrent Receipt of Retirement Pay and Disability Compensation for Disabled Veterans (7)', 10);
-// CBO Outlook 2017
+const adjustments = {
+  spendingCuts: [
+    {
+      text: 'Military (Discretionary)',
+      options: [
+        {text: '10%', value: 0.1 * MILITARY_TOTAL},
+        {text: '20%', value: 0.2 * MILITARY_TOTAL},
+        {text: '50%', value: 0.5 * MILITARY_TOTAL},
+        {text: '80%', value: 0.8 * MILITARY_TOTAL}
+      ],
+      source: CBO_OUTLOOK,
+      note: 'Page 78'
+    },
+    {
+      text: 'Supplemental Nutrition Assistance Program',
+      amount: 71,
+      source: CBO_OUTLOOK,
+      note: 'Page 76'
+    },
+    {
+      text: 'Supplemental Security Income',
+      amount: 56,
+      source: CBO_OUTLOOK,
+      note: 'Page 76'
+    },
+    {
+      text: 'Unemployment compensation',
+      amount: 32,
+      source: CBO_OUTLOOK,
+      note: 'Page 76, note: unemployment has its own tax that would need to be maintained.'
+    },
+    {
+      text: 'Family support and foster care',
+      amount: 32,
+      source: CBO_OUTLOOK,
+      note: 'Page 76'
+    },
+    {
+      text: 'Child nutrition',
+      amount: 24,
+      source: CBO_OUTLOOK,
+      note: 'Page 76'
+    },
+    {
+      text: 'Reduce Funding for International Affairs Programs',
+      amount: 10,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 28, Page 19'
+    },
+    {
+      text: 'Eliminate Human Space Exploration Programs',
+      amount: 8,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 29, Page 19'
+    },
+    {
+      text: 'Limit Highway Funding to Expected Highway Revenues',
+      amount: 7.5,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 33, Page 21'
+    },
+    {
+      text: 'Reduce the Size of the Federal Workforce Through Attrition',
+      amount: 4,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 42, Page 25'
+    },
+    {
+      text: 'Eliminate the Add-On to Pell Grants That Is Funded With Mandatory Spending',
+      amount: 7.5,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 6, Page 8'
+    },
+    {
+      text: 'Eliminate Concurrent Receipt of Retirement Pay and Disability Compensation for Disabled Veterans',
+      amount: 10,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 7, Page 9'
+    }
+  ],
+  taxPreferenceAdjustments: [
+    {
+      text: 'Earned income, child, and other tax credits',
+      amount: 86,
+      source: CBO_OUTLOOK,
+      note: 'Page 76'
+    },
+    /* {
+      text: 'Employer-paid health care, health insurance, and long-term care insurance',
+      amount: 143.8,
+      source: BIGGEST_TAX_BREAKS
+    },*/
+    {
+      text: 'End lower tax rates on dividends and long-term capital gains',
+      amount: 134.6,
+      source: BIGGEST_TAX_BREAKS
+    },
+    {
+      text: 'End deferal of active income of controlled foreign corporations',
+      amount: 108.9,
+      source: BIGGEST_TAX_BREAKS
+    },
+    {
+      text: 'End deductibility of contributions to and earnings of defined-contribution retirement plans',
+      amount: 82.7,
+      source: BIGGEST_TAX_BREAKS
+    },
+    {
+      text: 'End mortgage interest deduction for owner occupied residences',
+      amount: 77.0,
+      source: BIGGEST_TAX_BREAKS
+    },
+    {
+      text: 'Eliminate the deduction for state and local taxes',
+      amount: 100,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 51, Page 32'
+    },
+    {
+      text: 'End deductibility of contirbutions to and earnings of defined-benefit pension plans',
+      amount: 57.4,
+      source: BIGGEST_TAX_BREAKS
+    },
+    {
+      text: 'Subsidies for insurance purchased through health benefit exchanges',
+      amount: 53.5,
+      source: BIGGEST_TAX_BREAKS
+    },
+    {
+      text: 'Increase the Maximum Taxable Earnings for the Social Security Payroll Tax',
+      amount: 65,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 60, Page 39'
+    },
+    {
+      text: 'Use an alternative measure of inflation to index Social Security and other mandatory programs',
+      amount: 15,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 21, Page 16'
+    },
+    {
+      text: 'Curtail the deduction for charitable giving',
+      amount: 20,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 52, Page 32'
+    },
+    {
+      text: 'Include all income that U.S. citizens earn abroad in taxable income',
+      amount: 9,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 54, Page 34'
+    },
+    {
+      text: 'Tax Social Security and railroad retirement benefits in the same way that distributions from defined benefit pensions are taxed',
+      amount: 38,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 55, Page 35'
+    },
+    {
+      text: 'Eliminate certain tax preferences for education expenses',
+      amount: 12,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 58, Page 37'
+    },
+    {
+      text: 'Extend the period for depreciating the cost of certain investments',
+      amount: 22,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 66, Page 44'
+    },
+    {
+      text: 'Repeal the deduction for domestic production activities',
+      amount: 19,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 67, Page 44'
+    }
+  ],
+  taxIncreases: [
+    {
+      text: 'Increase individual income tax rates',
+      options: [
+        {text: '1%', value: 65},
+        {text: '2%', value: 130},
+        {text: '5%', value: 325},
+        {text: '10%', value: 650}
+      ],
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 46, Page 29'
+    },
+    {
+      text: 'Increase corporate income tax rates',
+      options: [
+        {text: '1%', value: 10},
+        {text: '2%', value: 20},
+        {text: '5%', value: 50},
+        {text: '10%', value: 100}
+      ],
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 63, Page 42'
+    },
+    {
+      text: 'Increase excise taxes on motor fuels by 35 cents and index for inflation',
+      amount: 45,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 70, Page 46'
+    },
+    {
+      text: 'Increase all taxes on alcoholic beverages to $16 per proof gallon',
+      amount: 6.5,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 71, Page 46'
+    },
+    {
+      text: 'Increase the excise tax on cigarettes by 50 cents per pack',
+      amount: 3.2,
+      source: CBO_BUDGET_OPTIONS,
+      note: 'Option 79, Page 53'
+    }
+  ]
+};
+
 // addSpendingCut('Social Security - Old-Age and Survivors Insurance', 817);
 
-// http://www.pewresearch.org/fact-tank/2016/04/06/the-biggest-u-s-tax-breaks/
-// addTaxPreferenceAdjustment('Employer-paid health care, health insurance, and long-term care insurance', 143.8);
-addTaxPreferenceAdjustment('Lower tax rates on dividends and long-term capital gains', 134.6);
-addTaxPreferenceAdjustment('Deferal of active income of controlled foreign corporations', 108.9);
-addTaxPreferenceAdjustment('Contributions to and earnings of defined-contribution retirement plans', 82.7);
-addTaxPreferenceAdjustment('Mortgage interest deduction for owner occupied residences', 77.0);
-addTaxPreferenceAdjustment('Deductibility of (nonbusiness) state and local income, sales, and personal property taxes', 65.1);
-addTaxPreferenceAdjustment('Contirbutions to and earnings of defined-benefit pension plans', 57.4);
-addTaxPreferenceAdjustment('Subsidies for insurance purchased through health benefit exchanges', 53.5);
-
-// CBO Outlook 2017
-addTaxPreferenceAdjustment('Increase the Maximum Taxable Earnings for the Social Security Payroll Tax (60)', 65);
-addTaxPreferenceAdjustment('Earned income, child, and other tax credits', 90);
-addTaxPreferenceAdjustment('Use an Alternative Measure of Inflation to Index Social Security and Other Mandatory Programs (21)', 15);
-addTaxPreferenceAdjustment('Curtail the Deduction for Charitable Giving (52)', 20);
-addTaxPreferenceAdjustment('Include All Income That U.S. Citizens Earn Abroad in Taxable Income (54)', 9);
-addTaxPreferenceAdjustment('Tax Social Security and Railroad Retirement Benefits in the Same Way That Distributions From Defined Benefit Pensions Are Taxed (55)', 38);
-addTaxPreferenceAdjustment('Eliminate Certain Tax Preferences for Education Expenses (58)', 12);
-addTaxPreferenceAdjustment('Extend the Period for Depreciating the Cost of Certain Investments (66)', 22);
-addTaxPreferenceAdjustment('Repeal the Deduction for Domestic Production Activities (67)', 19);
-
-addTaxIncrease('Increase Individual Income Tax Rates (46)', 65, [
-  {text: '1%', value: 65},
-  {text: '2%', value: 130},
-  {text: '5%', value: 325},
-  {text: '10%', value: 650}
-]);
-addTaxIncrease('Increase Corporate Income Tax Rates by 1 Percentage Point (63)', 10, [
-  {text: '1%', value: 10},
-  {text: '2%', value: 20},
-  {text: '5%', value: 50},
-  {text: '10%', value: 100}
-]);
-addTaxIncrease('Increase Excise Taxes on Motor Fuels by 35 Cents and Index for Inflation (45)', 45);
-addTaxIncrease('Increase All Taxes on Alcoholic Beverages to $16 per Proof Gallon (71)', 6.5);
-addTaxIncrease('Increase the Excise Tax on Cigarettes by 50 Cents per Pack (79)', 3.2);
+adjustments.spendingCuts.forEach(a => addSpendingCut(a));
+adjustments.taxPreferenceAdjustments.forEach(a => addTaxPreferenceAdjustment(a));
+adjustments.taxIncreases.forEach(a => addTaxIncrease(a));
 
 let idCounter = 0;
 
-function addSpendingCut(text, amountBillions, options) {
-  initialState.spendingCuts.push(addItem(text, amountBillions, options));
+function addSpendingCut(data) {
+  initialState.spendingCuts.push(addItem(data));
 }
 
-function addTaxPreferenceAdjustment(text, amountBillions, options) {
-  initialState.taxPreferenceAdjustments.push(addItem(text, amountBillions, options));
+function addTaxPreferenceAdjustment(data) {
+  initialState.taxPreferenceAdjustments.push(addItem(data));
 }
 
-function addTaxIncrease(text, amountBillions, options) {
-  initialState.taxIncreases.push(addItem(text, amountBillions, options));
+function addTaxIncrease(data) {
+  initialState.taxIncreases.push(addItem(data));
 }
 
-function addItem(text, amountBillions, options) {
+function addItem({text, amount: amountBillions, options}) {
   const item = {
     text,
     amount: amountBillions * 1000000000,
@@ -109,8 +285,8 @@ function addItem(text, amountBillions, options) {
     options.forEach(o => {
       o.value *= 1000000000;
     });
+    item.amount = options[0].value;
   }
-  initialState.budgetItems.push(item);
   return item;
 }
 
