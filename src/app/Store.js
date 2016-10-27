@@ -14,6 +14,7 @@ Vue.use(Vuex);
 const CBO_OUTLOOK = 'CBO_OUTLOOK';
 const CBO_BUDGET_OPTIONS = 'CBO_BUDGET_OPTIONS';
 const BIGGEST_TAX_BREAKS = 'BIGGEST_TAX_BREAKS';
+const CARBON_TAX = 'CARBON_TAX';
 const initialState = {
   population: 325000000,
   federalEmployees: 4185000,
@@ -26,7 +27,8 @@ const initialState = {
   sources: {
     [CBO_OUTLOOK]: {url: 'https://www.cbo.gov/sites/default/files/114th-congress-2015-2016/reports/51908-2016_Outlook_Update_OneCol-2.pdf'},
     [CBO_BUDGET_OPTIONS]: {url: 'https://www.cbo.gov/sites/default/files/cbofiles/attachments/49638-BudgetOptions.pdf'},
-    [BIGGEST_TAX_BREAKS]: {url: 'http://www.pewresearch.org/fact-tank/2016/04/06/the-biggest-u-s-tax-breaks/'}
+    [BIGGEST_TAX_BREAKS]: {url: 'http://www.pewresearch.org/fact-tank/2016/04/06/the-biggest-u-s-tax-breaks/'},
+    [CARBON_TAX]: {url: 'http://www.carbontax.org/faqs/'}
   }
 };
 
@@ -249,6 +251,12 @@ const adjustments = {
       amount: 3.2,
       source: CBO_BUDGET_OPTIONS,
       note: 'Option 79, Page 53'
+    },
+    {
+      text: 'Carbon tax',
+      amount: 80,
+      source: CARBON_TAX,
+      note: 'Faq. #15'
     }
   ]
 };
