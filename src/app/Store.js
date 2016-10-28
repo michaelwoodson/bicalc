@@ -25,10 +25,22 @@ const initialState = {
   taxPreferenceAdjustments: [],
   taxIncreases: [],
   sources: {
-    [CBO_OUTLOOK]: {url: 'https://www.cbo.gov/sites/default/files/114th-congress-2015-2016/reports/51908-2016_Outlook_Update_OneCol-2.pdf'},
-    [CBO_BUDGET_OPTIONS]: {url: 'https://www.cbo.gov/sites/default/files/cbofiles/attachments/49638-BudgetOptions.pdf'},
-    [BIGGEST_TAX_BREAKS]: {url: 'http://www.pewresearch.org/fact-tank/2016/04/06/the-biggest-u-s-tax-breaks/'},
-    [CARBON_TAX]: {url: 'http://www.carbontax.org/faqs/'}
+    [CBO_OUTLOOK]: {
+      name: 'CBO Budget and Economic Outlook: 2016 to 2026',
+      url: 'https://www.cbo.gov/sites/default/files/114th-congress-2015-2016/reports/51908-2016_Outlook_Update_OneCol-2.pdf'
+    },
+    [CBO_BUDGET_OPTIONS]: {
+      name: 'CBO Options for Reducing the Deficit: 2015 to 2024',
+      url: 'https://www.cbo.gov/sites/default/files/cbofiles/attachments/49638-BudgetOptions.pdf'
+    },
+    [BIGGEST_TAX_BREAKS]: {
+      name: 'PewResearchCenter: The biggest U.S. tax breaks',
+      url: 'http://www.pewresearch.org/fact-tank/2016/04/06/the-biggest-u-s-tax-breaks/'
+    },
+    [CARBON_TAX]: {
+      name: 'Carbon Tax Center: FAQs',
+      url: 'http://www.carbontax.org/faqs/'
+    }
   }
 };
 
@@ -281,12 +293,14 @@ function addTaxIncrease(data) {
   initialState.taxIncreases.push(addItem(data));
 }
 
-function addItem({text, amount: amountBillions, options}) {
+function addItem({text, amount: amountBillions, options, note, source}) {
   const item = {
     text,
     amount: amountBillions * 1000000000,
     applied: true,
-    id: idCounter++
+    id: idCounter++,
+    note,
+    source
   };
   if (options) {
     item.options = options;

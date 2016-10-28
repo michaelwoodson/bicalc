@@ -12,6 +12,7 @@
     <select v-if="budgetItem.options" v-model="budgetItem.amount">
       <option v-for="option in budgetItem.options" :value="option.value">{{option.text}}</option>
     </select>
+    <button class="btn" @click.prevent.stop="help(budgetItem)">?</button>
   </div>
 </template>
 
@@ -26,6 +27,9 @@ export default {
     handleChange(id) {
       this.applyBudgetItem(id);
     },
+    help(item) {
+      this.$root.$emit('showhelp', item);
+    }
   }
 };
 </script>

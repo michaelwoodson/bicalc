@@ -16,10 +16,14 @@
     <p>Pop: {{population | nicenumber}} <button @click.prevent.stop="showHelp">?</button></p>
     <b-modal id="help" ref="help">
       <div slot="modal-header">
-        Header
+        <h3>{{helpItem.text}}</h3>
       </div>
       <div slot="modal-body">
-        Body
+        <h3 ng-if="!helpItem.options">
+        {{helpItem.amount | nicenumber}} / year
+        </h3>
+        <p v-if="helpItem.source">Source: <a :href="sources[helpItem.source].url" target="_blank">{{sources[helpItem.source].name}}</a></p>
+        <p v-if="helpItem.note">{{helpItem.note}}</p>
       </div>
       <div slot="modal-footer">
         <button class="btn btn-primary" @click.prevent.stop="hideHelp">Got it!</button>
@@ -36,7 +40,15 @@ export default {
   name: 'App',
   data() {
     return {
+      sources: this.$store.state.sources,
+      helpItem: {}
     };
+  },
+  created: function () {
+    this.$root.$on('showhelp', (item) => {
+      this.helpItem = item;
+      this.$refs.help.show();
+    });
   },
   computed: {
     ...mapGetters(['budgetItems', 'spendingCuts', 'taxPreferenceAdjustments', 'taxIncreases']),
@@ -64,9 +76,6 @@ export default {
     },
     countApplied(items) {
       return items.filter(item => item.applied).length;
-    },
-    showHelp() {
-      this.$refs.help.show();
     },
     hideHelp() {
       this.$refs.help.hide();
