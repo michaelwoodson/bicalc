@@ -22,8 +22,10 @@
         <h3 ng-if="!helpItem.options">
         {{helpItem.amount | nicenumber}} / year
         </h3>
-        <p v-if="helpItem.source">Source: <a :href="sources[helpItem.source].url" target="_blank">{{sources[helpItem.source].name}}</a></p>
-        <p v-if="helpItem.note">{{helpItem.note}}</p>
+        <p v-if="helpItem.source">
+          Source: <a :href="sources[helpItem.source].url" target="_blank">{{sources[helpItem.source].name}}</a>
+          <span v-if="helpItem.note">({{helpItem.note}})</span>
+        </p>
       </div>
       <div slot="modal-footer">
         <button class="btn btn-primary" @click.prevent.stop="hideHelp">Got it!</button>
