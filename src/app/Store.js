@@ -49,17 +49,6 @@ const MILITARY_TOTAL = 592;
 const adjustments = {
   spendingCuts: [
     {
-      text: 'Military (Discretionary)',
-      options: [
-        {text: '10%', value: 0.1 * MILITARY_TOTAL},
-        {text: '20%', value: 0.2 * MILITARY_TOTAL},
-        {text: '50%', value: 0.5 * MILITARY_TOTAL},
-        {text: '80%', value: 0.8 * MILITARY_TOTAL}
-      ],
-      source: CBO_OUTLOOK,
-      note: 'Page 78'
-    },
-    {
       text: 'Supplemental Nutrition Assistance Program',
       amount: 71,
       source: CBO_OUTLOOK,
@@ -124,6 +113,17 @@ const adjustments = {
       amount: 10,
       source: CBO_BUDGET_OPTIONS,
       note: 'Option 7, Page 9'
+    },
+    {
+      text: 'Military (Discretionary)',
+      options: [
+        {text: '10%', value: 0.1 * MILITARY_TOTAL},
+        {text: '20%', value: 0.2 * MILITARY_TOTAL},
+        {text: '50%', value: 0.5 * MILITARY_TOTAL},
+        {text: '80%', value: 0.8 * MILITARY_TOTAL}
+      ],
+      source: CBO_OUTLOOK,
+      note: 'Page 78'
     }
   ],
   taxPreferenceAdjustments: [
@@ -297,7 +297,7 @@ function addItem({text, amount: amountBillions, options, note, source}) {
   const item = {
     text,
     amount: amountBillions * 1000000000,
-    applied: true,
+    applied: false,
     id: idCounter++,
     note,
     source

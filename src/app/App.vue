@@ -19,8 +19,16 @@
         <h3>{{helpItem.text}}</h3>
       </div>
       <div slot="modal-body">
-        <h3 ng-if="!helpItem.options">
-        {{helpItem.amount | nicenumber}} / year
+        <template v-if="helpItem.options">
+          <h3>Options</h3>
+          <ul>
+            <li :class="{active: helpItem.amount === option.value}" v-for="option in helpItem.options">
+              {{option.text}} {{option.value | nicenumber}} / year
+            </li>
+          </ul>
+        </template>
+        <h3 v-else>
+          {{helpItem.amount | nicenumber}} / year
         </h3>
         <p v-if="helpItem.source">
           Source: <a :href="sources[helpItem.source].url" target="_blank">{{sources[helpItem.source].name}}</a>
@@ -96,5 +104,8 @@ export default {
   }
   body { 
     padding-top: 65px; 
+  }
+  .active {
+    font-weight: bold;
   }
 </style>
