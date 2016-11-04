@@ -11,19 +11,58 @@ Vue.use(Vuex);
 // https://www.ssa.gov/policy/docs/quickfacts/stat_snapshot/
 // Incarcerated population:
 // https://en.wikipedia.org/wiki/Incarceration_in_the_United_States
+// Child population:
+// https://www.census.gov/quickfacts/table/PST045215/00
 const CBO_OUTLOOK = 'CBO_OUTLOOK';
 const CBO_BUDGET_OPTIONS = 'CBO_BUDGET_OPTIONS';
 const BIGGEST_TAX_BREAKS = 'BIGGEST_TAX_BREAKS';
 const CARBON_TAX = 'CARBON_TAX';
+const POPULATION = 325000000;
+const HALF_CHILDREN = POPULATION * 0.229 * 0.5;
+let paCounter = 0;
 const initialState = {
-  population: 325000000,
-  federalEmployees: 4185000,
-  socialSecurityRecipients: 65764000,
-  incarcerated: 2220300,
+  population: POPULATION,
   budgetItems: [],
   spendingCuts: [],
   taxPreferenceAdjustments: [],
   taxIncreases: [],
+  populationAdjustments: [
+    {
+      id: paCounter++,
+      name: 'Exclude federal employees',
+      size: 4185000,
+      excluded: true,
+      help: 'Reduce federal salaries by the amount of the basic income.'
+    },
+    {
+      id: paCounter++,
+      name: 'Exclude Social Security recipients',
+      size: 65764000,
+      excluded: true,
+      help: 'Reduce social security payments by the amount of the basic income.'
+    },
+    {
+      id: paCounter++,
+      name: 'Exclude incarcerated',
+      size: 2220300,
+      excluded: true,
+      help: 'Since living expenses are already paid.'
+    },
+    {
+      id: paCounter++,
+      name: 'Exclude half children',
+      size: HALF_CHILDREN,
+      excluded: false,
+      help: 'Child population split into two so you can figure a 50% basic income for children.'
+    },
+    {
+      id: paCounter++,
+      name: 'Exclude half children',
+      size: HALF_CHILDREN,
+      excluded: false,
+      help: 'Child population split into two so you can figure a 50% basic income for children.'
+    }
+  ],
   sources: {
     [CBO_OUTLOOK]: {
       name: 'CBO Budget and Economic Outlook: 2016 to 2026',
@@ -273,8 +312,6 @@ const adjustments = {
   ]
 };
 
-// addSpendingCut('Social Security - Old-Age and Survivors Insurance', 817);
-
 adjustments.spendingCuts.forEach(a => addSpendingCut(a));
 adjustments.taxPreferenceAdjustments.forEach(a => addTaxPreferenceAdjustment(a));
 adjustments.taxIncreases.forEach(a => addTaxIncrease(a));
@@ -322,6 +359,13 @@ export default new Vuex.Store({
           item
       );
     },
+    [ActionTypes.TOGGLE_POP_ADJUSTMENT](state, id) {
+      state.populationAdjustments = state.populationAdjustments.map(item =>
+        item.id === id ?
+          Object.assign({}, item, {excluded: !item.excluded}) :
+          item
+      );
+    },
     [ActionTypes.APPLY](state, data) {
       state[data.what] = state[data.what].map(item => Object.assign({}, item, {
         applied: data.applied
@@ -333,7 +377,7 @@ export default new Vuex.Store({
     spendingCuts: state => state.spendingCuts,
     taxPreferenceAdjustments: state => state.taxPreferenceAdjustments,
     taxIncreases: state => state.taxIncreases,
-    adjustedPopulation: state => state.population - state.federalEmployees - state.socialSecurityRecipients - state.incarcerated,
+    adjustedPopulation: state => state.population - state.populationAdjustments.filter(a => a.excluded).map(a => a.size).reduce((a1, a2) => a1 + a2, 0),
     budgetItems: state => [...state.spendingCuts, ...state.taxPreferenceAdjustments, ...state.taxIncreases],
     basicIncome: (state, getters) => {
       return getters.budgetItems

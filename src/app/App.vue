@@ -13,7 +13,7 @@
         <budget-item v-for="budgetItem in group.items" :budgetItem="budgetItem"></budget-item>
       </b-collapse>
     </div>
-    <p>Pop: {{population | nicenumber}} <button @click.prevent.stop="showHelp">?</button></p>
+    <p>Pop: {{adjustedPopulation | nicenumber}} of {{population | nicenumber}} <button class="btn" @click.prevent.stop="showPopConfig">?</button></p>
     <b-modal id="help" ref="help">
       <div slot="modal-header">
         <h3>{{helpItem.text}}</h3>
@@ -39,6 +39,26 @@
         <button class="btn btn-primary" @click.prevent.stop="hideHelp">Got it!</button>
       </div>
     </b-modal>
+    <b-modal id="population-config" ref="populationModal">
+      <div slot="modal-header">
+        <h3>Population Configuration</h3>
+      </div>
+      <div slot="modal-body">
+          <h3>Total population: {{population | nicenumber}}</h3>
+          <ul>
+            <li v-for="pa in populationAdjustments">
+              <label>
+                <input type="checkbox" :checked="pa.excluded" @change="togglePopAdjustment(pa.id)"/>
+                {{pa.name}} {{pa.size | nicenumber}}
+              </label>
+            </li>
+          </ul>
+          <h3>Adjusted population: {{adjustedPopulation | nicenumber}}</h3>
+      </div>
+      <div slot="modal-footer">
+        <button class="btn btn-primary" @click.prevent.stop="hidePopConfig">Got it!</button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -61,12 +81,22 @@ export default {
     });
   },
   computed: {
-    ...mapGetters(['budgetItems', 'spendingCuts', 'taxPreferenceAdjustments', 'taxIncreases']),
+    ...mapGetters([
+      'budgetItems',
+      'spendingCuts',
+      'taxPreferenceAdjustments',
+      'taxIncreases',
+      'population',
+      'adjustedPopulation'
+    ]),
     checked() {
       return this.appliedCount === this.budgetItems.length;
     },
     population () {
       return this.$store.state.population;
+    },
+    populationAdjustments () {
+      return this.$store.state.populationAdjustments;
     },
     basicIncome () {
       return this.$store.getters.basicIncome;
@@ -80,7 +110,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['apply']),
+    ...mapActions(['apply', 'togglePopAdjustment']),
     handleApply(what, applied) {
       this.apply({what, applied});
     },
@@ -89,6 +119,12 @@ export default {
     },
     hideHelp() {
       this.$refs.help.hide();
+    },
+    showPopConfig() {
+      this.$refs.populationModal.show();
+    },
+    hidePopConfig() {
+      this.$refs.populationModal.hide();
     }
   },
   components: {

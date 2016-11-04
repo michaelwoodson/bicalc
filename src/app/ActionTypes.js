@@ -1,2 +1,3 @@
 export const APPLY_BUDGET_ITEM = 'APPLY_BUDGET_ITEM';
 export const APPLY = 'APPLY';
+export const TOGGLE_POP_ADJUSTMENT = 'TOGGLE_POP_ADJUSTMENT';
