@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import * as ActionTypes from './ActionTypes';
 import * as actions from './actions';
+import bigInt from 'big-integer';
 
 Vue.use(Vuex);
 
@@ -19,13 +20,15 @@ const BIGGEST_TAX_BREAKS = 'BIGGEST_TAX_BREAKS';
 const CARBON_TAX = 'CARBON_TAX';
 const POPULATION = 325000000;
 const HALF_CHILDREN = POPULATION * 0.229 * 0.5;
+
+const SPENDING_CUTS = 'SPENDING_CUTS';
+const TAX_PREFERENCE_ADJUSTMENTS = 'TAX_PREFERENCE_ADJUSTMENTS';
+const TAX_INCREASES = 'TAX_INCREASES';
+
 let paCounter = 0;
 const initialState = {
   population: POPULATION,
   budgetItems: [],
-  spendingCuts: [],
-  taxPreferenceAdjustments: [],
-  taxIncreases: [],
   populationAdjustments: [
     {
       id: paCounter++,
@@ -312,32 +315,36 @@ const adjustments = {
   ]
 };
 
+let idCounter = 0;
+
 adjustments.spendingCuts.forEach(a => addSpendingCut(a));
 adjustments.taxPreferenceAdjustments.forEach(a => addTaxPreferenceAdjustment(a));
 adjustments.taxIncreases.forEach(a => addTaxIncrease(a));
 
-let idCounter = 0;
-
 function addSpendingCut(data) {
-  initialState.spendingCuts.push(addItem(data));
+  data.type = SPENDING_CUTS;
+  addItem(data);
 }
 
 function addTaxPreferenceAdjustment(data) {
-  initialState.taxPreferenceAdjustments.push(addItem(data));
+  data.type = TAX_PREFERENCE_ADJUSTMENTS;
+  addItem(data);
 }
 
 function addTaxIncrease(data) {
-  initialState.taxIncreases.push(addItem(data));
+  data.type = TAX_INCREASES;
+  addItem(data);
 }
 
-function addItem({text, amount: amountBillions, options, note, source}) {
+function addItem({text, amount: amountBillions, options, note, source, type}) {
   const item = {
     text,
     amount: amountBillions * 1000000000,
     applied: false,
     id: idCounter++,
     note,
-    source
+    source,
+    type
   };
   if (options) {
     item.options = options;
@@ -346,7 +353,35 @@ function addItem({text, amount: amountBillions, options, note, source}) {
     });
     item.amount = options[0].value;
   }
-  return item;
+  initialState.budgetItems.push(item);
+}
+
+const BASE = 36;
+
+if (window.location.hasOwnProperty('hash') && window.location.hash.length > 7) {
+  const split = window.location.hash.substring(1).split('_');
+  if (split.length === 4) {
+    const [version, encodedBudgetItems, encodedOptions, encodedPop] = split;
+    if (version === '0') {
+      const itemsBigInt = bigInt(encodedBudgetItems, BASE);
+      initialState.budgetItems.forEach((item, index) => {
+        item.applied = getBit(itemsBigInt, index);
+      });
+      const optionsBigInt = bigInt(encodedOptions, BASE);
+      initialState.budgetItems.filter(item => item.hasOwnProperty('options')).forEach((item, index) => {
+        const optionIndex = optionsBigInt.shiftRight(index * 3).and(bigInt(7)).toJSNumber();
+        item.amount = item.options[optionIndex].value;
+      });
+      const popBigInt = bigInt(encodedPop, BASE);
+      initialState.populationAdjustments.forEach((p, index) => {
+        p.excluded = getBit(popBigInt, index);
+      });
+    }
+  }
+}
+
+function getBit(n, index) {
+  return n.shiftRight(index).isOdd();
 }
 
 export default new Vuex.Store({
@@ -367,23 +402,34 @@ export default new Vuex.Store({
       );
     },
     [ActionTypes.APPLY](state, data) {
-      state[data.what] = state[data.what].map(item => Object.assign({}, item, {
+      state.budgetItems = state.budgetItems.map(item => item.type === data.type ? Object.assign({}, item, {
         applied: data.applied
-      }));
+      }) : item);
     }
   },
   actions,
   getters: {
-    spendingCuts: state => state.spendingCuts,
-    taxPreferenceAdjustments: state => state.taxPreferenceAdjustments,
-    taxIncreases: state => state.taxIncreases,
+    spendingCuts: state => state.budgetItems.filter(item => item.type === SPENDING_CUTS),
+    taxPreferenceAdjustments: state => state.budgetItems.filter(item => item.type === TAX_PREFERENCE_ADJUSTMENTS),
+    taxIncreases: state => state.budgetItems.filter(item => item.type === TAX_INCREASES),
     adjustedPopulation: state => state.population - state.populationAdjustments.filter(a => a.excluded).map(a => a.size).reduce((a1, a2) => a1 + a2, 0),
-    budgetItems: state => [...state.spendingCuts, ...state.taxPreferenceAdjustments, ...state.taxIncreases],
     basicIncome: (state, getters) => {
-      return getters.budgetItems
+      return state.budgetItems
         .filter(item => item.applied)
         .map(item => item.amount)
         .reduce((a1, a2) => a1 + a2, 0) / getters.adjustedPopulation / 12;
+    },
+    hash: state => {
+      const encodedBudgetItems = state.budgetItems.map(item => item.applied ? bigInt.one.shiftLeft(item.id) : bigInt.zero).reduce((b1, b2) => b1.add(b2), bigInt.zero).toString(36);
+      const encodedOptions = state.budgetItems
+        .filter(item => item.hasOwnProperty('options'))
+        .map((item, i) => {
+          const optionIndex = item.options.findIndex(o => o.value === item.amount);
+          return bigInt(optionIndex).shiftLeft(i * 3);
+        })
+        .reduce((b1, b2) => b1.add(b2), bigInt.zero).toString(BASE);
+      const encodedPop = state.populationAdjustments.map(p => p.excluded ? bigInt.one.shiftLeft(p.id) : bigInt.zero).reduce((b1, b2) => b1.add(b2), bigInt.zero).toString(36);
+      return `0_${encodedBudgetItems}_${encodedOptions}_${encodedPop}`;
     }
   }
 });

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "big-integer": "1.6.16",
     "bootstrap-vue": "0.3.6",
     "numeral": "1.5.3",
     "vue": "^2.0.0-rc.6",

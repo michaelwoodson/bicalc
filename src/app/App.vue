@@ -7,13 +7,13 @@
     <div class="row">
     <h1>Basic income calculator</h1>
     <div v-for="group in revenueGroups" class="card p-1">
-      <b-collapse-toggle :target="group.id"><h3 class="toggler">{{group.label}} ({{countApplied(group.items)}}/{{group.items.length}})</h3></b-collapse-toggle>
-      <b-collapse :id="group.id">
-        Select: <a href="#" @click.prevent.stop="handleApply(group.id, true)">All</a> / <a href="" @click.prevent.stop="handleApply(group.id, false)">None</a>
+      <b-collapse-toggle :target="group.type"><h3 class="toggler">{{group.label}} ({{countApplied(group.items)}}/{{group.items.length}})</h3></b-collapse-toggle>
+      <b-collapse :id="group.type">
+        Select: <a href="#" @click.prevent.stop="handleApply(group.type, true)">All</a> / <a href="" @click.prevent.stop="handleApply(group.type, false)">None</a>
         <budget-item v-for="budgetItem in group.items" :budgetItem="budgetItem"></budget-item>
       </b-collapse>
     </div>
-    <p>Pop: {{adjustedPopulation | nicenumber}} of {{population | nicenumber}} <button class="btn" @click.prevent.stop="showPopConfig">?</button></p>
+    <p>Pop: {{adjustedPopulation | nicenumber}} of {{population | nicenumber}} <a href="" @click.prevent.stop="showPopConfig">&#x2699;</a></p>
     <b-modal id="help" ref="help">
       <div slot="modal-header">
         <h3>{{helpItem.text}}</h3>
@@ -82,16 +82,13 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'budgetItems',
       'spendingCuts',
       'taxPreferenceAdjustments',
       'taxIncreases',
       'population',
-      'adjustedPopulation'
+      'adjustedPopulation',
+      'hash'
     ]),
-    checked() {
-      return this.appliedCount === this.budgetItems.length;
-    },
     population () {
       return this.$store.state.population;
     },
@@ -103,16 +100,16 @@ export default {
     },
     revenueGroups() {
       return[
-        {label: 'Spending Cuts', id: 'spendingCuts', items: this.spendingCuts},
-        {label: 'Tax Preference Adjustments', id: 'taxPreferenceAdjustments', items: this.taxPreferenceAdjustments},
-        {label: 'Tax Increases', id: 'taxIncreases', items: this.taxIncreases}
+        {label: 'Spending Cuts', type: 'SPENDING_CUTS', items: this.spendingCuts},
+        {label: 'Tax Preference Adjustments', type: 'TAX_PREFERENCE_ADJUSTMENTS', items: this.taxPreferenceAdjustments},
+        {label: 'Tax Increases', type: 'TAX_INCREASES', items: this.taxIncreases}
       ];
     }
   },
   methods: {
     ...mapActions(['apply', 'togglePopAdjustment']),
-    handleApply(what, applied) {
-      this.apply({what, applied});
+    handleApply(type, applied) {
+      this.apply({type, applied});
     },
     countApplied(items) {
       return items.filter(item => item.applied).length;
@@ -129,6 +126,11 @@ export default {
   },
   components: {
     'budget-item': BudgetItem
+  },
+  watch: {
+    hash(value) {
+      window.location.hash = value;
+    }
   }
 };
 
