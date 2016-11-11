@@ -54,6 +54,14 @@
             </li>
           </ul>
           <h3>Adjusted population: {{adjustedPopulation | nicenumber}}</h3>
+          <details>
+            Federal employees wouldn&#39;t actually be excluded, but their salaries would be reduced
+            by the amount of the basic income. Same for Social Security recipients. There are many 
+            different plans floated around for children, some don&#39;t want to incentivize parenthood
+            while others don&#39;t want to punish children for their parents&#39; decisions.  Excluding
+            half children would mean paying half the basic income to all children, not picking which
+            children would receive it.
+          </details>
       </div>
       <div slot="modal-footer">
         <button class="btn btn-primary" @click.prevent.stop="hidePopConfig">Got it!</button>
