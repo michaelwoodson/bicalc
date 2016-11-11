@@ -10,7 +10,21 @@
       <b-collapse-toggle :target="group.type"><h3 class="toggler">{{group.label}} ({{countApplied(group.items)}}/{{group.items.length}})</h3></b-collapse-toggle>
       <b-collapse :id="group.type">
         Select: <a href="#" @click.prevent.stop="handleApply(group.type, true)">All</a> / <a href="" @click.prevent.stop="handleApply(group.type, false)">None</a>
-        <budget-item v-for="budgetItem in group.items" :budgetItem="budgetItem"></budget-item>
+        <div v-for="budgetItem in group.items" v-bind:class="{'applied': budgetItem.applied}">
+          <label class="view">
+            <input
+              class="toggle"
+              type="checkbox"
+              v-model="budgetItem.applied"
+              v-on:click="handleChange(budgetItem.id)"
+              />
+            {{budgetItem.text}}
+          </label>
+          <select v-if="budgetItem.options" v-model="budgetItem.amount">
+            <option v-for="option in budgetItem.options" :value="option.value">{{option.text}}</option>
+          </select>
+          <button class="btn" @click.prevent.stop="help(budgetItem)">?</button>
+        </div>
       </b-collapse>
     </div>
     <p>Pop: {{adjustedPopulation | nicenumber}} of {{population | nicenumber}} <a href="" @click.prevent.stop="showPopConfig" class="icon">&#x2699;</a></p>
@@ -73,7 +87,6 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import BudgetItem from './BudgetItem.vue';
 
 export default {
   name: 'App',
@@ -82,12 +95,6 @@ export default {
       sources: this.$store.state.sources,
       helpItem: {}
     };
-  },
-  created: function () {
-    this.$root.$on('showhelp', (item) => {
-      this.helpItem = item;
-      this.$refs.help.show();
-    });
   },
   computed: {
     ...mapGetters([
@@ -116,7 +123,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['apply', 'togglePopAdjustment']),
+    ...mapActions(['apply', 'togglePopAdjustment', 'applyBudgetItem']),
     handleApply(type, applied) {
       this.apply({type, applied});
     },
@@ -131,10 +138,14 @@ export default {
     },
     hidePopConfig() {
       this.$refs.populationModal.hide();
+    },
+    handleChange(id) {
+      this.applyBudgetItem(id);
+    },
+    help(item) {
+      this.helpItem = item;
+      this.$refs.help.show();
     }
-  },
-  components: {
-    'budget-item': BudgetItem
   },
   watch: {
     hash(value) {
