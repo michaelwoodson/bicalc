@@ -13,7 +13,7 @@
         <budget-item v-for="budgetItem in group.items" :budgetItem="budgetItem"></budget-item>
       </b-collapse>
     </div>
-    <p>Pop: {{adjustedPopulation | nicenumber}} of {{population | nicenumber}} <a href="" @click.prevent.stop="showPopConfig">&#x2699;</a></p>
+    <p>Pop: {{adjustedPopulation | nicenumber}} of {{population | nicenumber}} <a href="" @click.prevent.stop="showPopConfig" class="icon">&#x2699;</a></p>
     <b-modal id="help" ref="help">
       <div slot="modal-header">
         <h3>{{helpItem.text}}</h3>
@@ -154,5 +154,8 @@ export default {
   }
   .active {
     font-weight: bold;
+  }
+  .icon:hover {
+    text-decoration: none;
   }
 </style>
