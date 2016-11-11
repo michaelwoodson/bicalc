@@ -1,7 +1,7 @@
 # Basic Income Calculator
 
 A simple calculator to consider different ways to create a basic income
-via a compination of spending cuts, tax preference adjustments (ending
+via a combination of spending cuts, tax preference adjustments (ending
 different types of deductions and credits), and tax increases. The
 calculator is designed for the United States.
 
