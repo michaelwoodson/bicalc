@@ -338,23 +338,14 @@ function addTaxIncrease(data) {
   addItem(data);
 }
 
-function addItem({text, amount: amountBillions, options, note, source, type, warn}) {
-  const item = {
-    text,
-    amount: amountBillions * 1000000000,
-    applied: false,
-    id: idCounter++,
-    note,
-    source,
-    type,
-    warn
-  };
-  if (options) {
-    item.options = options;
-    options.forEach(o => {
+function addItem(rawItem) {
+  const {amount: amountBillions} = rawItem;
+  const item = Object.assign({id: idCounter++, applied: false}, rawItem, {amount: amountBillions * 1000000000});
+  if (item.options) {
+    item.options.forEach(o => {
       o.value *= 1000000000;
     });
-    item.amount = options[0].value;
+    item.amount = item.options[0].value;
   }
   initialState.budgetItems.push(item);
 }
