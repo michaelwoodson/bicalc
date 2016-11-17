@@ -170,7 +170,7 @@ const adjustments = {
   ],
   taxPreferenceAdjustments: [
     {
-      text: 'Earned income, child, and other tax credits',
+      text: 'End earned income, child, and other tax credits',
       amount: 86,
       source: CBO_OUTLOOK,
       note: 'Page 76'
@@ -275,6 +275,7 @@ const adjustments = {
         {text: '10%', value: 650}
       ],
       source: CBO_BUDGET_OPTIONS,
+      warn: 'This increases taxes by percentage points e.g. 1 percentage point from 25% to 26%, not 25% to 25.25%!',
       note: 'Option 46, Page 29'
     },
     {
@@ -286,6 +287,7 @@ const adjustments = {
         {text: '10%', value: 100}
       ],
       source: CBO_BUDGET_OPTIONS,
+      warn: 'This increases taxes by percentage points e.g. 1 percentage point from 25% to 26%, not 25% to 25.25%!',
       note: 'Option 63, Page 42'
     },
     {
@@ -336,7 +338,7 @@ function addTaxIncrease(data) {
   addItem(data);
 }
 
-function addItem({text, amount: amountBillions, options, note, source, type}) {
+function addItem({text, amount: amountBillions, options, note, source, type, warn}) {
   const item = {
     text,
     amount: amountBillions * 1000000000,
@@ -344,7 +346,8 @@ function addItem({text, amount: amountBillions, options, note, source, type}) {
     id: idCounter++,
     note,
     source,
-    type
+    type,
+    warn
   };
   if (options) {
     item.options = options;

@@ -6,6 +6,7 @@
     </nav>
     <div class="row">
     <h1>Basic income calculator</h1>
+    <p>Choose options to create a basic income from the sections below.  Watch the computed basic income change in the top left.  The URL is updated so it is easy to bookmark/share your plan.</p>
     <div v-for="group in revenueGroups" class="card p-1">
       <b-collapse-toggle :target="group.type"><h3 class="toggler">{{group.label}} ({{countApplied(group.items)}}/{{group.items.length}})</h3></b-collapse-toggle>
       <b-collapse :id="group.type">
@@ -47,6 +48,9 @@
         <p v-if="helpItem.source">
           Source: <a :href="sources[helpItem.source].url" target="_blank">{{sources[helpItem.source].name}}</a>
           <span v-if="helpItem.note">({{helpItem.note}})</span>
+        </p>
+        <p v-if="helpItem.warn" class="alert alert-warning" role="alert">
+          {{helpItem.warn}}
         </p>
       </div>
       <div slot="modal-footer">
