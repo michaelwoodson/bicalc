@@ -175,11 +175,11 @@ const adjustments = {
       source: CBO_OUTLOOK,
       note: 'Page 76'
     },
-    /* {
-      text: 'Employer-paid health care, health insurance, and long-term care insurance',
+    {
+      text: 'End deduction for employer-paid health care, health insurance, and long-term care insurance',
       amount: 143.8,
       source: BIGGEST_TAX_BREAKS
-    },*/
+    },
     {
       text: 'End lower tax rates on dividends and long-term capital gains',
       amount: 134.6,
